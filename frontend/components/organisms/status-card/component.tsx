@@ -5,7 +5,7 @@ import styles from '~/styles/Status.module.css'
 
 type Props = {
   title: string
-  data?: OpenAPIStatus | GraphQLStatus
+  data?: GraphQLStatus | OpenAPIStatus
   error?: any
 }
 const Component: React.FC<Props> = (props) => {

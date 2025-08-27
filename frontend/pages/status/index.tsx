@@ -27,7 +27,7 @@ const BFFOpenAPIStatusCard: React.FC = () => {
   const client = api(
     aspida(fetch, {
       baseURL: '/api',
-    })
+    }),
   )
   const { data, error } = useAspidaSWR(client.openapi.status)
   return (

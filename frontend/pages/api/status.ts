@@ -6,7 +6,7 @@ const { publicRuntimeConfig } = getConfig()
 
 export default function handler(
   req: NextApiRequest,
-  res: NextApiResponse<Status>
+  res: NextApiResponse<Status>,
 ) {
   res.status(200).json({
     name: publicRuntimeConfig.PACKAGE_NAME,

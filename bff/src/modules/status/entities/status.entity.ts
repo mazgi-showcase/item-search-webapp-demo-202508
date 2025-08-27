@@ -34,13 +34,13 @@ export class Status {
 
   @ApiProperty({
     enum: State,
-    example: 'healthy',
+    example: State.healthy,
     description: 'The state of BFF',
   })
   @Field(() => State, {
     description: 'The state of BFF',
   })
-  state: State | 'healthy'
+  state: State
 
   @ApiProperty({
     example: '1.2.3',
