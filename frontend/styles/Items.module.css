@@ -1,0 +1,166 @@
+.main {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  /* border: 1px dotted lime; */
+}
+
+.grid {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  width: 96%;
+  max-width: 1280px;
+  /* border: 1px dotted pink; */
+}
+
+.cell {
+  height: 100%;
+  width: 100%;
+}
+
+ul.tabTitles {
+  list-style: none;
+  display: flex;
+  margin-bottom: 0;
+}
+.tabTitles a {
+  padding: 0.2rem 0.4rem;
+  border-top-left-radius: 0.5rem;
+  border-top-right-radius: 0.5rem;
+}
+.tabTitles a:hover {
+  cursor: pointer;
+  text-decoration: underline;
+}
+.tabTitles .selected a {
+  background-color: lightgray;
+  border-left: 2px solid gray;
+  border-top: 2px solid gray;
+  border-right: 2px solid gray;
+  font-weight: bolder;
+}
+@media (prefers-color-scheme: dark) {
+  .tabTitles .selected a {
+    background-color: white;
+    color: black;
+  }
+}
+.tabTitles :not(.selected) a {
+  border-left: 1px solid gray;
+  border-top: 1px solid gray;
+  border-right: 1px solid gray;
+  color: gray;
+}
+
+.tabs {
+  border-radius: 8px;
+  /* https://developer.mozilla.org/en-US/docs/Web/CSS/box-shadow */
+  /* offset-x | offset-y | blur-radius | spread-radius | color */
+  box-shadow: 2px 4px 4px 2px rgba(1, 1, 1, 0.05);
+  border: 1px solid gray;
+  margin: 2px;
+  padding: 0.6rem;
+}
+@media (prefers-color-scheme: dark) {
+  .tabs {
+    box-shadow: 2px 4px 8px 2px rgba(240, 240, 240, 0.2);
+  }
+}
+
+@keyframes tabContentFadeIn {
+  0% {
+    visibility: collapse;
+    opacity: 0;
+  }
+  1% {
+    visibility: visible;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+.tabs .tab .tabContent {
+  height: 0;
+  visibility: collapse;
+}
+.tabs .tab.selected .tabContent {
+  height: 100%;
+  visibility: visible;
+  animation-duration: 0.1s;
+  animation-name: tabContentFadeIn;
+}
+.tabs .tab .itemControls {
+  display: flex;
+  justify-content: space-between;
+  border: 1px dotted pink;
+}
+.tabs .tab .itemControls > div {
+  display: inline-flex;
+}
+.tabs .tab .itemControls a {
+  background-color: aqua;
+  padding-left: 0.2rem;
+  padding-right: 0.2rem;
+}
+.tabs .tab .itemControls a:hover {
+  text-decoration: underline;
+}
+
+.items .itemRow,
+.itemTitleRow {
+  display: flex;
+}
+.items .itemTitleRow {
+  border-bottom: 2px solid gray;
+  font-weight: bold;
+}
+@media (prefers-color-scheme: dark) {
+  .items .itemTitleRow {
+    border-bottom: 2px solid white;
+  }
+}
+.items .itemRow:nth-child(odd) {
+  background-color: lightgray;
+}
+@media (prefers-color-scheme: dark) {
+  .items .itemRow:nth-child(odd) {
+    background-color: gray;
+  }
+}
+.items .itemRow:not(:last-child) {
+  border-bottom: 1px solid lightgray;
+  padding-top: 0.4rem;
+  padding-bottom: 0.4rem;
+}
+.items dt {
+  font-size: small;
+  width: 28%;
+}
+.items dd {
+  margin-left: 0;
+  margin-right: 0;
+  padding-left: 1rem;
+}
+.items dd:not(.itemCheck) {
+  border-left: 2px dotted gray;
+}
+@media (prefers-color-scheme: dark) {
+  .items dd:not(.itemCheck) {
+    border-left: 2px dotted lightgray;
+  }
+}
+.items dd.itemCheck {
+  padding-left: 0.1rem;
+  padding-right: 0.1rem;
+  min-width: 1.8rem;
+  width: 2%;
+}
+.items dd.itemText {
+  flex-wrap: wrap;
+  font-size: small;
+  width: 70%;
+}

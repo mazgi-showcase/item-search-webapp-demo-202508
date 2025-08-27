@@ -1,4 +1,9 @@
 /* eslint-disable */
+export type CreateItemDto = {
+  /** A text. */
+  text: string
+}
+
 export type Item = {
   /** The unique ID of the Item */
   id: string

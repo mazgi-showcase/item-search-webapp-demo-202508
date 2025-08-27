@@ -45,8 +45,13 @@ export type Item = {
 
 export type Query = {
   __typename?: 'Query'
+  item: Item
   items: Array<Item>
   status: Status
+}
+
+export type QueryItemArgs = {
+  id: Scalars['ID']['input']
 }
 
 export enum State {
