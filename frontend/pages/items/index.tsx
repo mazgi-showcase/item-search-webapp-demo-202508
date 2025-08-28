@@ -3,6 +3,7 @@ import useAspidaSWR from '@aspida/swr'
 import { GraphQLClient } from 'graphql-request'
 import { NextPage } from 'next'
 import Head from 'next/head'
+import Link from 'next/link'
 import { useRouter } from 'next/router'
 import React, {
   createContext,
@@ -15,6 +16,7 @@ import React, {
 import { ItemTable } from '~/components/organisms/item-table'
 import { getSdkWithHooks } from '~/lib/generated/graphql/sdk'
 import api from '~/lib/generated/openapi/$api'
+import { Item } from '~/lib/generated/openapi/@types'
 import styles from '~/styles/Items.module.css'
 
 const TabIds = {
@@ -90,7 +92,24 @@ const GraphQLTab: React.FC<TabProps> = (props) => {
   const { data, error } = sdk.useItemsQuery('items')
 
   if (!isActive) return <Fragment />
-  return <ItemTable data={data?.items} error={error} />
+  return (
+    <Fragment>
+      <div className={styles.itemControls}>
+        <div>
+          <Link href={`#`}>Delete</Link>
+        </div>
+        <div>
+          <input name="Text" placeholder="Text" type={`text`} size={64}></input>
+          <Link href={`#`}>Search</Link>
+        </div>
+        <div>
+          <input name="Text" placeholder="Text" type={`text`} size={64}></input>
+          <Link href={`#`}>Create</Link>
+        </div>
+      </div>
+      {/* <ItemTable data={data} error={error} /> */}
+    </Fragment>
+  )
 }
 
 const OpenAPITab: React.FC<TabProps> = (props) => {
@@ -100,10 +119,69 @@ const OpenAPITab: React.FC<TabProps> = (props) => {
       baseURL: '/api',
     }),
   )
-  const { data, error } = useAspidaSWR(client.openapi.items)
+  const [data, setData] = useState<Item[]>()
+  const { data: initialData, error } = useAspidaSWR(client.openapi.items)
+  useEffect(() => {
+    setData(initialData)
+  }, [initialData])
+  const [text, setText] = useState('')
+  const findItemsByText = async (text: string) => {
+    fetch(`/api/openapi/items/findByText/${text}`, {
+      method: 'GET',
+    })
+      .then(async (res) => {
+        const json = await res.json()
+        console.log(json)
+        const items: Item[] = []
+        for (const el of json) {
+          console.log(el)
+          items.push({ id: el.id, text: el.text })
+        }
+        setData(items)
+      })
+      .catch((e) => {
+        console.error(e)
+      })
+  }
 
   if (!isActive) return <Fragment />
-  return <ItemTable data={data} error={error} />
+  return (
+    <Fragment>
+      <div className={styles.itemControls}>
+        <div>
+          <Link href={`#`}>Delete</Link>
+        </div>
+        <div>
+          <input
+            name="Text"
+            onChange={(event) => {
+              setText(event.target.value)
+            }}
+            placeholder="Search Keyword"
+            type={`text`}
+            size={64}
+            value={text}
+          ></input>
+          <a
+            onClick={() => {
+              try {
+                findItemsByText(text === '' ? '*' : text)
+              } catch (e) {
+                console.error(e)
+              }
+            }}
+          >
+            Search
+          </a>
+        </div>
+        <div>
+          <input name="Text" placeholder="Text" type={`text`} size={64}></input>
+          <Link href={`#`}>Create</Link>
+        </div>
+      </div>
+      <ItemTable data={data} error={error} />
+    </Fragment>
+  )
 }
 
 const Page: NextPage = () => {
@@ -114,9 +192,9 @@ const Page: NextPage = () => {
     if (router.isReady) {
       const query = router.query
       const selectedTab =
-        query['tab'] == TabIds.OpenAPI.toLowerCase()
-          ? TabIds.OpenAPI
-          : TabIds.GraphQL
+        query['tab'] == TabIds.GraphQL.toLowerCase()
+          ? TabIds.GraphQL
+          : TabIds.OpenAPI
       setSelectedTabId(selectedTab)
     }
   }, [router.isReady, router.query])

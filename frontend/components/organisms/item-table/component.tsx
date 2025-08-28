@@ -1,4 +1,3 @@
-import Link from 'next/link'
 import { Fragment } from 'react'
 import { Item as GraphQLItem } from '~/lib/generated/graphql/sdk'
 import { Item as OpenAPIItem } from '~/lib/generated/openapi/@types'
@@ -26,16 +25,6 @@ const Component: React.FC<Props> = (props) => {
     )
   return (
     <Fragment>
-      <div className={styles.itemControls}>
-        <div>
-          <Link href={`#`}>Delete</Link>
-        </div>
-        <div>
-          <input name="ID" placeholder="ID" type={`text`} size={36}></input>
-          <input name="Text" placeholder="Text" type={`text`} size={64}></input>
-          <Link href={`#`}>Create</Link>
-        </div>
-      </div>
       <dl className={styles.items}>
         <div className={styles.itemTitleRow}>
           <dd className={styles.itemCheck}></dd>

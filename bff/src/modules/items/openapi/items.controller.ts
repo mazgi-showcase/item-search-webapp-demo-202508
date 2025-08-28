@@ -1,3 +1,4 @@
+import { Prisma } from '@prisma/client'
 import { CreateItemDto } from '../dtos/create-item.dto'
 import { Item } from '../entities/item.entity'
 import { ItemsService } from '../items.service'
@@ -16,7 +17,6 @@ import {
   ApiOkResponse,
   ApiOperation,
   ApiParam,
-  ApiQuery,
 } from '@nestjs/swagger'
 
 @Controller('items')
@@ -65,14 +65,23 @@ export class ItemsController {
   @ApiParam({
     name: 'text',
     examples: {
-      text1: { value: 'foo' },
-      text2: { value: 'bar' },
+      keyword1: { value: 'fixed' },
+      wildcard: { value: '*' },
     },
   })
   @ApiOperation({ summary: 'Find items by text.' })
   @ApiOkResponse({ type: [Item], description: 'Return matched items.' })
   async findByText(@Param('text') text: string): Promise<Item[]> {
-    const items = this.service.readAll()
+    const where: Prisma.ItemsWhereInput =
+      text === '*'
+        ? {}
+        : {
+            text: {
+              contains: text,
+            },
+          }
+    const params = { where }
+    const items = this.service.items(params)
     return items
   }
 }
