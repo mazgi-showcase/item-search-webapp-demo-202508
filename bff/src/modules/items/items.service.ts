@@ -1,9 +1,19 @@
 import { CreateItemDto } from './dtos/create-item.dto'
 import { Item } from './entities/item.entity'
 import { Injectable, NotFoundException } from '@nestjs/common'
-import { Prisma } from '@prisma/client'
+import { Prisma, PrismaClient } from '@prisma/client'
 import { ulid } from 'ulid'
 import { PrismaService } from '~/src/prisma/prisma.service'
+import { readReplicas } from '@prisma/extension-read-replicas'
+
+const prisma = new PrismaClient().$extends(
+  readReplicas({
+    url: [
+      process.env.DATABASE_URL_REPLICA_0,
+      process.env.DATABASE_URL_REPLICA_1,
+    ],
+  }),
+)
 
 @Injectable()
 export class ItemsService {
@@ -41,7 +51,8 @@ export class ItemsService {
     orderBy?: Prisma.ItemsOrderByWithRelationInput
   }): Promise<Item[]> {
     const { skip, take, cursor, where, orderBy } = params
-    return this.prismaService.items.findMany({
+    // return this.prismaService.items.findMany({
+    return prisma.items.findMany({
       skip,
       take,
       cursor,
